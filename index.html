@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A surprise anniversary celebration website." />
+  <title>Happy Anniversary!</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* CODE A palette (Moonlit Rose + Champagne) */
+      --bg-0: #fff7f3; /* porcelain */
+      --bg-1: #fdeef0; /* rose fog */
+      --bg-2: #f6f0e7; /* champagne cream */
+      --bg-3: #efe3ff; /* lilac hush */
+      --accent-rose: #d65b7b;
+      --accent-gold: #d7b26a;
+      --accent-lilac: #a98bff;
+      --accent-mint: #71d6c7;
+
+      --ink: #241a1a;
+      --ink-soft: rgba(36,26,26,.72);
+      --line: rgba(36,26,26,.14);
+
+      --card: rgba(255,255,255,.54);
+      --card-2: rgba(255,255,255,.34);
+
+      --shadow-sm: 0 10px 22px rgba(36,26,26,.09);
+      --shadow-md: 0 18px 42px rgba(36,26,26,.13);
+      --shadow-lg: 0 28px 70px rgba(36,26,26,.18);
+
+      --radius-md: 12px;
+      --radius-lg: 24px;
+      --radius-xl: 28px;
+
+      --max: 1100px;
+
+      --ease: cubic-bezier(.2,.8,.2,1);
+      --ease-soft: cubic-bezier(.25,.65,.25,1);
+
+      --focus: 0 0 0 3px rgba(214,91,123,.22),
+               0 0 0 6px rgba(215,178,106,.22),
+               0 0 0 9px rgba(169,139,255,.14);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: "Lato", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: hidden;
+
+      background:
+        radial-gradient(900px 650px at 10% -10%, rgba(169,139,255,.20), transparent 60%),
+        radial-gradient(900px 650px at 110% 10%, rgba(215,178,106,.18), transparent 62%),
+        radial-gradient(850px 650px at 20% 115%, rgba(214,91,123,.16), transparent 65%),
+        radial-gradient(700px 520px at 90% 90%, rgba(113,214,199,.14), transparent 60%),
+        linear-gradient(180deg, var(--bg-0), var(--bg-2));
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(36,26,26,.05), transparent 55%),
+        radial-gradient(circle at 50% 120%, rgba(36,26,26,.06), transparent 60%),
+        repeating-linear-gradient(
+          135deg,
+          rgba(36,26,26,.035) 0px,
+          rgba(36,26,26,.035) 1px,
+          transparent 1px,
+          transparent 9px
+        );
+      opacity: .30;
+      mix-blend-mode: multiply;
+    }
+
+    #bg-canvas{
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: .65;
+    }
+
+    h1, h2, h3 { font-family: "Playfair Display", serif; color: var(--ink); }
+    .cursive { font-family: "Great Vibes", cursive; font-weight: 400; }
+    img { display: block; max-width: 100%; object-fit: cover; }
+
+    a { color: inherit; text-decoration: none; }
+    a:focus-visible, button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+      border-radius: 8px;
+    }
+
+    .skip-link{
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      transform: translateY(-160%);
+      transition: transform .25s var(--ease);
+      z-index: 9999;
+    }
+    .skip-link:focus{ transform: translateY(0); }
+
+    /* ========================================
+       HERO
+       ======================================== */
+    header[role="banner"]{
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: 2.5rem 1.25rem;
+      z-index: 1;
+      isolation: isolate;
+      border-bottom: 1px solid rgba(36,26,26,.10);
+    }
+
+    /* Sparkle drift layer */
+    header[role="banner"]::before{
+      content:"";
+      position: absolute;
+      inset: -40% -30%;
+      pointer-events: none;
+      opacity: .62;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.92) 0 2px, transparent 3px),
+        radial-gradient(circle at 22% 75%, rgba(255,255,255,.78) 0 1.5px, transparent 3px),
+        radial-gradient(circle at 50% 28%, rgba(255,255,255,.84) 0 1.8px, transparent 3px),
+        radial-gradient(circle at 70% 46%, rgba(255,255,255,.84) 0 2px, transparent 3px),
+        radial-gradient(circle at 88% 72%, rgba(255,255,255,.84) 0 1.6px, transparent 3px);
+      filter: blur(.15px);
+      animation: sparkleDrift 11s var(--ease-soft) infinite;
+      z-index: 0;
+    }
+
+    /* Aurora sheen layer (boosted blending/intensity for hero) */
+    header[role="banner"]::after{
+      content:"";
+      position: absolute;
+      inset: -35% -35%;
+      pointer-events: none;
+      opacity: .44;                 /* ⬅️ increased */
+      background:
+        radial-gradient(700px 420px at 30% 30%, rgba(214,91,123,.18), transparent 60%),
+        radial-gradient(780px 520px at 70% 40%, rgba(169,139,255,.18), transparent 62%),
+        radial-gradient(820px 560px at 50% 85%, rgba(215,178,106,.16), transparent 66%),
+        conic-gradient(from 200deg at 50% 40%,
+          rgba(214,91,123,.24),
+          rgba(215,178,106,.24),
+          rgba(113,214,199,.18),
+          rgba(169,139,255,.24),
+          rgba(214,91,123,.24)
+        );
+      filter: blur(22px);           /* ⬅️ slightly more blur */
+      mix-blend-mode: soft-light;   /* ⬅️ stronger blending */
+      transform: translateY(0) rotate(0deg);
+      animation: auroraRoll 14s var(--ease-soft) infinite;
+      z-index: 0;
+    }
+
+    @keyframes sparkleDrift{
+      0%   { transform: translate3d(0,0,0) rotate(0deg); }
+      50%  { transform: translate3d(10px,12px,0) rotate(1deg); }
+      100% { transform: translate3d(0,0,0) rotate(0deg); }
+    }
+    @keyframes auroraRoll{
+      0%   { transform: translateY(0) rotate(0deg); }
+      50%  { transform: translateY(14px) rotate(8deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* NEW: star pop field (little popups slowly appearing) */
+    #star-field{
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .star-pop{
+      position: absolute;
+      line-height: 1;
+      color: var(--accent-gold);
+      opacity: 0;
+      transform: translateY(0) scale(.6) rotate(var(--rot, 0deg));
+      text-shadow:
+        0 10px 25px rgba(36,26,26,.10),
+        0 0 18px rgba(255,255,255,.45);
+      filter: drop-shadow(0 8px 18px rgba(215,178,106,.18));
+      will-change: transform, opacity;
+      animation-name: starPop;
+      animation-timing-function: var(--ease-soft);
+      animation-fill-mode: forwards;
+    }
+    @keyframes starPop{
+      0%   { opacity: 0; transform: translateY(0) scale(.55) rotate(var(--rot, 0deg)); }
+      18%  { opacity: .95; }
+      60%  { opacity: .82; }
+      100% { opacity: 0; transform: translateY(-58px) scale(1.12) rotate(calc(var(--rot, 0deg) + 22deg)); }
+    }
+
+    .hero-content{
+      max-width: 900px;
+      z-index: 2;
+      animation: slideUpFade 1.1s var(--ease) both;
+      position: relative; /* for bloom */
+    }
+
+    /* NEW: extra bloom behind the center text to “increase blending colors” */
+    .hero-content::before{
+      content:"";
+      position: absolute;
+      inset: -90px -70px;
+      background:
+        radial-gradient(320px 220px at 35% 45%, rgba(214,91,123,.18), transparent 70%),
+        radial-gradient(340px 240px at 65% 45%, rgba(169,139,255,.18), transparent 70%),
+        radial-gradient(380px 280px at 50% 70%, rgba(215,178,106,.16), transparent 72%),
+        radial-gradient(420px 320px at 50% 30%, rgba(113,214,199,.12), transparent 70%);
+      filter: blur(20px);
+      opacity: .85;
+      z-index: -1;
+      transform: translateZ(0);
+      mix-blend-mode: soft-light;
+    }
+
+    @keyframes slideUpFade{
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(36,26,26,.14);
+      color: rgba(36,26,26,.78);
+      padding: 10px 18px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: .78rem;
+      font-weight: 800;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .badge::after{
+      content:"";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.55) 25%, transparent 50%);
+      transform: translateX(-120%);
+      animation: badgeShine 6.5s var(--ease) infinite;
+      opacity: .7;
+    }
+    @keyframes badgeShine{
+      0%, 70% { transform: translateX(-120%); }
+      100%    { transform: translateX(120%); }
+    }
+    .badge .dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(214,91,123,.95), rgba(215,178,106,.95));
+      box-shadow: 0 10px 22px rgba(214,91,123,.18);
+      flex: 0 0 auto;
+    }
+
+    header h1{
+      font-size: clamp(2.6rem, 6vw, 5.1rem);
+      line-height: 1.05;
+      text-shadow: 0 18px 48px rgba(36,26,26,.14);
+    }
+    header h1 .amp{
+      font-family: "Great Vibes", cursive;
+      color: rgba(214,91,123,.95);
+      font-size: clamp(3rem, 7.2vw, 6.2rem);
+      display: block;
+      margin: -10px 0;
+      text-shadow: 0 18px 48px rgba(214,91,123,.18);
+    }
+
+    .subtitle{
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      color: rgba(36,26,26,.72);
+      margin-top: 1rem;
+      font-weight: 300;
+    }
+
+    .btn-scroll{
+      margin-top: 2.5rem;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(36,26,26,.14);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: rgba(36,26,26,.78);
+      box-shadow: var(--shadow-sm);
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease), background .2s var(--ease);
+      animation: float 2.2s infinite ease-in-out;
+    }
+    .btn-scroll:hover{
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      background: rgba(255,255,255,.88);
+    }
+    .btn-scroll:focus-visible{ box-shadow: var(--focus), var(--shadow-md); }
+
+    @keyframes float{
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ========================================
+       MAIN LAYOUT
+       ======================================== */
+    main[role="main"]{
+      position: relative;
+      z-index: 1;
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 4rem 1rem 3rem;
+    }
+
+    section{ padding: 4rem 0; }
+
+    .section-header{
+      text-align: center;
+      margin-bottom: 3.25rem;
+    }
+    .section-header h2{
+      font-size: clamp(2rem, 3.2vw, 2.8rem);
+      margin-bottom: .6rem;
+    }
+    .section-header p{
+      font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+      color: rgba(214,91,123,.85);
+    }
+
+    .flourish{
+      display: grid;
+      place-items: center;
+      margin: 2.5rem 0 0;
+      opacity: .95;
+    }
+    .flourish span{
+      width: 120px;
+      height: 18px;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 18% 50%, rgba(214,91,123,.55), transparent 56%),
+        radial-gradient(circle at 50% 50%, rgba(215,178,106,.65), transparent 56%),
+        radial-gradient(circle at 82% 50%, rgba(169,139,255,.55), transparent 56%);
+      filter: blur(.15px);
+      animation: pulseSoft 4.8s var(--ease-soft) infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    .flourish span::after{
+      content:"";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.55) 25%, transparent 50%);
+      transform: translateX(-120%);
+      animation: flourishShine 5.8s var(--ease) infinite;
+      opacity: .55;
+    }
+    @keyframes pulseSoft{
+      0%, 100% { transform: scale(1); opacity: .9; }
+      50%      { transform: scale(1.06); opacity: 1; }
+    }
+    @keyframes flourishShine{
+      0%, 60% { transform: translateX(-120%); }
+      100%    { transform: translateX(120%); }
+    }
+
+    /* ========================================
+       TIMELINE
+       ======================================== */
+    .timeline{
+      position: relative;
+      padding: 1rem 0;
+    }
+    .timeline::before{
+      content:"";
+      position: absolute;
+      top: 0; bottom: 0; left: 20px;
+      width: 2px;
+      background: rgba(215,178,106,.7);
+      opacity: .35;
+    }
+
+    article.message-card{
+      position: relative;
+      margin-bottom: 3rem;
+      padding-left: 50px;
+      animation: slideUpFade .85s var(--ease) backwards;
+    }
+
+    article.message-card::before{
+      content:"♥";
+      position: absolute;
+      left: 9px;
+      top: 22px;
+      width: 24px;
+      height: 24px;
+      background: rgba(255,255,255,.65);
+      border: 1px solid rgba(36,26,26,.14);
+      border-radius: 50%;
+      color: rgba(214,91,123,.95);
+      font-size: 12px;
+      display: grid;
+      place-items: center;
+      z-index: 2;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ========================================
+       MESSAGE CARD (unchanged)
+       ======================================== */
+    .card-inner{
+      position: relative;
+      background: linear-gradient(180deg, var(--card), var(--card-2));
+      border: 1px solid rgba(36,26,26,.12);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+      isolation: isolate;
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+      outline: none;
+    }
+
+    .card-inner::before{
+      content:"";
+      position: absolute;
+      inset: -2px;
+      border-radius: calc(var(--radius-xl) + 2px);
+      background:
+        radial-gradient(420px 200px at 12% 12%, rgba(214,91,123,.26), transparent 60%),
+        radial-gradient(420px 220px at 96% 18%, rgba(169,139,255,.26), transparent 62%),
+        radial-gradient(520px 240px at 50% 110%, rgba(215,178,106,.24), transparent 65%);
+      opacity: 0;
+      transform: scale(1.02);
+      transition: opacity .25s var(--ease), transform .25s var(--ease);
+      z-index: -1;
+    }
+
+    .card-inner::after{
+      content:"";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.55) 18%, transparent 38%);
+      transform: translateX(-120%);
+      opacity: .55;
+      transition: transform .7s var(--ease);
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: screen;
+    }
+
+    .card-inner:hover,
+    .card-inner:focus-visible{
+      transform: translateY(-6px) scale(1.012);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(214,91,123,.30);
+    }
+    .card-inner:hover::before,
+    .card-inner:focus-visible::before{
+      opacity: 1;
+      transform: scale(1);
+    }
+    .card-inner:hover::after,
+    .card-inner:focus-visible::after{
+      transform: translateX(120%);
+    }
+    .card-inner:focus-visible{
+      box-shadow: var(--focus), var(--shadow-md);
+    }
+
+    .spark{
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(36,26,26,.10);
+      box-shadow: 0 18px 40px rgba(36,26,26,.10);
+      transform: rotate(6deg);
+      transition: transform .25s var(--ease);
+      z-index: 2;
+    }
+    .spark svg{ width: 18px; height: 18px; opacity: .92; }
+    .card-inner:hover .spark,
+    .card-inner:focus-visible .spark{
+      transform: rotate(-8deg) translateY(-2px);
+    }
+
+    .card-header{
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px dashed rgba(215,178,106,.55);
+      position: relative;
+      z-index: 1;
+      padding-right: 40px;
+    }
+
+    .avatar{
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 3px solid rgba(255,255,255,.95);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      flex: 0 0 auto;
+    }
+
+    .sender-name{
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: rgba(36,26,26,.86);
+    }
+    .sender-role{
+      display: block;
+      font-size: .85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(215,178,106,.95);
+      font-weight: 800;
+      margin-top: .15rem;
+    }
+    .message-text{
+      color: rgba(36,26,26,.78);
+      font-size: 1.05rem;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+      padding-right: 40px;
+    }
+
+    /* ========================================
+       GALLERY
+       ======================================== */
+    #gallery { padding-top: 4rem; }
+
+    .gallery-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .gallery-item{
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      aspect-ratio: 1;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(36,26,26,.12);
+      background: rgba(255,255,255,.30);
+      transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s var(--ease);
+      isolation: isolate;
+    }
+
+    .gallery-item img{
+      width: 100%;
+      height: 100%;
+      transition: transform .5s var(--ease);
+      transform: scale(1.01);
+      filter: saturate(1.05) contrast(1.03);
+    }
+
+    .gallery-overlay{
+      position: absolute;
+      inset: 0;
+      background: rgba(36,26,26,.18);
+      opacity: 0;
+      display: grid;
+      place-items: center;
+      transition: opacity .25s var(--ease);
+    }
+    .gallery-overlay span{
+      color: rgba(255,255,255,.96);
+      font-size: 1.6rem;
+      transform: translateY(18px);
+      transition: transform .25s var(--ease);
+      text-shadow: 0 12px 28px rgba(0,0,0,.25);
+    }
+
+    .gallery-item:hover{
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(169,139,255,.26);
+    }
+    .gallery-item:hover img{ transform: scale(1.10); }
+    .gallery-item:hover .gallery-overlay{ opacity: 1; }
+    .gallery-item:hover .gallery-overlay span{ transform: translateY(0); }
+
+    .gallery-item a:focus-visible{
+      outline: none;
+      box-shadow: var(--focus);
+      border-radius: var(--radius-lg);
+      display: block;
+    }
+
+    /* ========================================
+       LIGHTBOX
+       ======================================== */
+    .lightbox{
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(20, 14, 16, .74);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      transition: opacity .25s var(--ease);
+      padding: 18px;
+    }
+    .lightbox:target{
+      display: grid;
+      place-items: center;
+      opacity: 1;
+    }
+
+    .lightbox-container{
+      position: relative;
+      width: min(980px, 100%);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.20);
+      background: rgba(255,255,255,.10);
+      box-shadow: var(--shadow-lg);
+      animation: popIn .35s var(--ease) both;
+    }
+    @keyframes popIn{
+      from { transform: translateY(10px) scale(.985); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .lightbox-media{
+      position: relative;
+      background: rgba(0,0,0,.18);
+      overflow: hidden;
+    }
+    .lightbox-media::after{
+      content:"";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(214,91,123,.10), rgba(169,139,255,.10), rgba(215,178,106,.10));
+      opacity: .55;
+      mix-blend-mode: soft-light;
+      animation: filmMove 7.5s var(--ease-soft) infinite;
+      pointer-events: none;
+    }
+    @keyframes filmMove{
+      0%   { transform: translateX(-3%) translateY(0%); }
+      50%  { transform: translateX(3%) translateY(2%); }
+      100% { transform: translateX(-3%) translateY(0%); }
+    }
+
+    .lightbox-img{
+      width: 100%;
+      height: min(72vh, 680px);
+      object-fit: cover;
+      transform: scale(1.01);
+      display: block;
+    }
+
+    .lightbox-caption{
+      background: rgba(255,255,255,.92);
+      border-top: 1px solid rgba(36,26,26,.10);
+      padding: 14px 16px 18px;
+      text-align: center;
+      font-family: "Great Vibes", cursive;
+      font-size: clamp(1.7rem, 2.2vw, 2.25rem);
+      color: rgba(36,26,26,.86);
+    }
+
+    .lightbox-close{
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: .95rem;
+      color: rgba(255,255,255,.96);
+      background: rgba(0,0,0,.34);
+      border: 1px solid rgba(255,255,255,.22);
+      box-shadow: 0 14px 34px rgba(0,0,0,.28);
+      transition: transform .2s var(--ease), background .2s var(--ease);
+      z-index: 2;
+      overflow: hidden;
+    }
+    .lightbox-close::after{
+      content:"";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.25) 25%, transparent 50%);
+      transform: translateX(-120%);
+      transition: transform .7s var(--ease);
+      opacity: .7;
+    }
+    .lightbox-close:hover{
+      transform: translateY(-2px);
+      background: rgba(0,0,0,.44);
+    }
+    .lightbox-close:hover::after{ transform: translateX(120%); }
+    .lightbox-close:focus-visible{
+      box-shadow: var(--focus), 0 14px 34px rgba(0,0,0,.28);
+    }
+    .lightbox-close .x{
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.18);
+      line-height: 1;
+    }
+
+    .lightbox-bg-click{
+      position: fixed;
+      inset: 0;
+      cursor: default;
+    }
+
+    /* ========================================
+       FINAL NOTE
+       ======================================== */
+    .final-note{
+      border-radius: var(--radius-xl);
+      padding: clamp(1.5rem, 4vw, 2.5rem);
+      background: rgba(255,255,255,.48);
+      border: 1px solid rgba(36,26,26,.12);
+      box-shadow: var(--shadow-md);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .final-note::before{
+      content:"";
+      position: absolute;
+      inset: -45% -35%;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(214,91,123,.20), transparent 55%),
+        radial-gradient(circle at 70% 60%, rgba(169,139,255,.20), transparent 55%),
+        radial-gradient(circle at 45% 90%, rgba(215,178,106,.20), transparent 55%),
+        conic-gradient(from 200deg at 50% 40%,
+          rgba(214,91,123,.16),
+          rgba(215,178,106,.16),
+          rgba(113,214,199,.12),
+          rgba(169,139,255,.16),
+          rgba(214,91,123,.16)
+        );
+      z-index: -1;
+      filter: blur(18px);
+      animation: finalGlow 10s var(--ease-soft) infinite;
+      opacity: .95;
+    }
+    @keyframes finalGlow{
+      0%   { transform: translateY(0) rotate(0deg); }
+      50%  { transform: translateY(12px) rotate(6deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    .final-note h3{
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      margin-bottom: .75rem;
+      text-shadow: 0 18px 48px rgba(36,26,26,.12);
+    }
+    .final-note .lead{
+      font-size: clamp(1.05rem, 2vw, 1.22rem);
+      color: rgba(36,26,26,.78);
+      margin: 0 auto 1rem;
+      max-width: 70ch;
+    }
+    .final-note p{
+      color: rgba(36,26,26,.72);
+      max-width: 78ch;
+      margin: 0 auto;
+      font-size: 1.03rem;
+    }
+    .final-note .signature{
+      margin-top: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(36,26,26,.12);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      font-weight: 800;
+      color: rgba(36,26,26,.76);
+    }
+    .final-note .signature::after{
+      content:"";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,.55) 25%, transparent 50%);
+      transform: translateX(-120%);
+      animation: badgeShine 6.5s var(--ease) infinite;
+      opacity: .7;
+    }
+    .final-note .signature .dot{
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(214,91,123,.95), rgba(215,178,106,.95));
+      box-shadow: 0 10px 22px rgba(214,91,123,.18);
+      flex: 0 0 auto;
+    }
+
+    /* ========================================
+       RESPONSIVE
+       ======================================== */
+    @media (min-width: 768px){
+      .timeline::before{ left: 50%; margin-left: -1px; }
+      article.message-card{ width: 50%; padding: 0; }
+
+      article.message-card:nth-child(odd){
+        left: 0;
+        padding-right: 40px;
+        text-align: right;
+      }
+      article.message-card:nth-child(odd) .card-header{ flex-direction: row-reverse; }
+      article.message-card:nth-child(odd)::before{ left: auto; right: -13px; }
+
+      article.message-card:nth-child(even){
+        left: 50%;
+        padding-left: 40px;
+      }
+      article.message-card:nth-child(even)::before{ left: -13px; }
+
+      .gallery-grid{ grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+    }
+
+    /* ========================================
+       FOOTER
+       ======================================== */
+    footer{
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2.25rem 1rem 2.5rem;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,.36));
+      border-top: 1px solid rgba(36,26,26,.10);
+      color: rgba(36,26,26,.65);
+    }
+    footer .cursive{
+      font-size: 1.7rem;
+      color: rgba(214,91,123,.9);
+      display: inline-block;
+      margin-bottom: .35rem;
+    }
+    footer small{ color: rgba(36,26,26,.58); }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      header[role="banner"]::before, header[role="banner"]::after{ display: none; }
+      .flourish{ display: none; }
+      .lightbox-media::after{ display: none; }
+      #bg-canvas{ display: none; }
+      #star-field{ display: none; } /* no popups if reduced motion */
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#messages">Skip to messages</a>
+
+  <!-- global svg defs (single instance) -->
+  <svg width="0" height="0" style="position:absolute; width:0; height:0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="sparkGrad" x1="0" x2="1">
+        <stop offset="0" stop-color="#d65b7b"/>
+        <stop offset="0.5" stop-color="#d7b26a"/>
+        <stop offset="1" stop-color="#a98bff"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <header role="banner" aria-label="Anniversary hero">
+    <!-- NEW: animated “pop” stars layer -->
+    <div id="star-field" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <div class="badge" aria-label="Celebration badge">
+        <span class="dot" aria-hidden="true"></span>
+        <span>30 Wonderful Years</span>
+      </div>
+
+      <h1>Mom <span class="amp">&</span> Dad</h1>
+      <p class="subtitle">Celebrating a lifetime of love, laughter, and family.</p>
+
+      <a href="#messages" class="btn-scroll" aria-label="Scroll down to messages">&darr;</a>
+    </div>
+  </header>
+
+  <main role="main">
+    <section id="messages" aria-label="Messages">
+      <div class="section-header">
+        <h2>Our Wishes</h2>
+        <p class="cursive">With love from the whole family</p>
+        <div class="flourish" aria-hidden="true"><span></span></div>
+      </div>
+
+      <div class="timeline" role="list" aria-label="Message timeline">
+        <article class="message-card" role="listitem">
+          <div class="card-inner" tabindex="0">
+            <div class="spark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="url(#sparkGrad)" d="M12 2l1.6 6.1L20 10l-6.4 1.9L12 18l-1.6-6.1L4 10l6.4-1.9L12 2z"/>
+              </svg>
+            </div>
+
+            <div class="card-header">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="Photo of Michael" class="avatar">
+              <div>
+                <span class="sender-name">Michael</span>
+                <span class="sender-role">Eldest Son</span>
+              </div>
+            </div>
+            <p class="message-text">"Happy Anniversary! Seeing the way you still look at each other after all these years is the definition of true love. Thank you for setting such an incredible example."</p>
+          </div>
+        </article>
+
+        <article class="message-card" role="listitem">
+          <div class="card-inner" tabindex="0">
+            <div class="spark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="url(#sparkGrad)" d="M12 2l1.6 6.1L20 10l-6.4 1.9L12 18l-1.6-6.1L4 10l6.4-1.9L12 2z"/>
+              </svg>
+            </div>
+
+            <div class="card-header">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80" alt="Photo of Sarah" class="avatar">
+              <div>
+                <span class="sender-name">Sarah</span>
+                <span class="sender-role">Daughter</span>
+              </div>
+            </div>
+            <p class="message-text">"To the best parents in the world. Your home has always been a sanctuary of warmth and laughter. Here's to thirty more years of happiness!"</p>
+          </div>
+        </article>
+
+        <article class="message-card" role="listitem">
+          <div class="card-inner" tabindex="0">
+            <div class="spark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="url(#sparkGrad)" d="M12 2l1.6 6.1L20 10l-6.4 1.9L12 18l-1.6-6.1L4 10l6.4-1.9L12 2z"/>
+              </svg>
+            </div>
+
+            <div class="card-header">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="Photo of David and Jenny" class="avatar">
+              <div>
+                <span class="sender-name">David &amp; Jenny</span>
+                <span class="sender-role">Son &amp; Daughter-in-law</span>
+              </div>
+            </div>
+            <p class="message-text">"We admire your partnership so much. May your day be filled with the same joy you bring to everyone around you."</p>
+          </div>
+        </article>
+
+        <article class="message-card" role="listitem">
+          <div class="card-inner" tabindex="0">
+            <div class="spark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="url(#sparkGrad)" d="M12 2l1.6 6.1L20 10l-6.4 1.9L12 18l-1.6-6.1L4 10l6.4-1.9L12 2z"/>
+              </svg>
+            </div>
+
+            <div class="card-header">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80" alt="Photo of Aunt Rose" class="avatar">
+              <div>
+                <span class="sender-name">Aunt Rose</span>
+                <span class="sender-role">With Love</span>
+              </div>
+            </div>
+            <p class="message-text">"Time flies when hearts are full. I remember your wedding day like it was yesterday. You've built a beautiful legacy."</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="gallery" aria-label="Gallery">
+      <div class="section-header">
+        <h2>Moments in Time</h2>
+        <p class="cursive">Capturing the memories</p>
+        <div class="flourish" aria-hidden="true"><span></span></div>
+      </div>
+
+      <div class="gallery-grid" aria-label="Gallery grid">
+        <div class="gallery-item">
+          <a href="#img1" aria-label="Open image 1">
+            <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=500&q=80" alt="Wedding">
+            <div class="gallery-overlay" aria-hidden="true"><span>&#10084;</span></div>
+          </a>
+        </div>
+
+        <div class="gallery-item">
+          <a href="#img2" aria-label="Open image 2">
+            <img src="https://images.unsplash.com/photo-1529634597503-139d372668c4?auto=format&fit=crop&w=500&q=80" alt="Travel">
+            <div class="gallery-overlay" aria-hidden="true"><span>&#10084;</span></div>
+          </a>
+        </div>
+
+        <div class="gallery-item">
+          <a href="#img3" aria-label="Open image 3">
+            <img src="https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&w=500&q=80" alt="Party">
+            <div class="gallery-overlay" aria-hidden="true"><span>&#10084;</span></div>
+          </a>
+        </div>
+
+        <div class="gallery-item">
+          <a href="#img4" aria-label="Open image 4">
+            <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=500&q=80" alt="Home">
+            <div class="gallery-overlay" aria-hidden="true"><span>&#10084;</span></div>
+          </a>
+        </div>
+
+        <div class="gallery-item">
+          <a href="#img5" aria-label="Open image 5">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=500&q=80" alt="Reunion">
+            <div class="gallery-overlay" aria-hidden="true"><span>&#10084;</span></div>
+          </a>
+        </div>
+
+        <div class="gallery-item">
+          <a href="#img6" aria-label="Open image 6">
+            <img src="https://images.unsplash.com/photo-1475518845976-0d12797149a3?auto=format&fit=crop&w=500&q=80" alt="Holiday">
+            <div class="gallery-overlay" aria-hidden="true"><span>&#10084;</span></div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Lightboxes -->
+      <div id="img1" class="lightbox" role="dialog" aria-modal="true" aria-label="Wedding photo">
+        <a href="#gallery" class="lightbox-bg-click" aria-label="Close lightbox"></a>
+        <div class="lightbox-container" role="document">
+          <a href="#gallery" class="lightbox-close" aria-label="Close lightbox"><span class="x" aria-hidden="true">×</span> Close</a>
+          <div class="lightbox-media">
+            <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=1200&q=90" class="lightbox-img" alt="Wedding">
+          </div>
+          <div class="lightbox-caption">The Beginning</div>
+        </div>
+      </div>
+
+      <div id="img2" class="lightbox" role="dialog" aria-modal="true" aria-label="Travel photo">
+        <a href="#gallery" class="lightbox-bg-click" aria-label="Close lightbox"></a>
+        <div class="lightbox-container" role="document">
+          <a href="#gallery" class="lightbox-close" aria-label="Close lightbox"><span class="x" aria-hidden="true">×</span> Close</a>
+          <div class="lightbox-media">
+            <img src="https://images.unsplash.com/photo-1529634597503-139d372668c4?auto=format&fit=crop&w=1200&q=90" class="lightbox-img" alt="Travel">
+          </div>
+          <div class="lightbox-caption">Traveling the World</div>
+        </div>
+      </div>
+
+      <div id="img3" class="lightbox" role="dialog" aria-modal="true" aria-label="Party photo">
+        <a href="#gallery" class="lightbox-bg-click" aria-label="Close lightbox"></a>
+        <div class="lightbox-container" role="document">
+          <a href="#gallery" class="lightbox-close" aria-label="Close lightbox"><span class="x" aria-hidden="true">×</span> Close</a>
+          <div class="lightbox-media">
+            <img src="https://images.unsplash.com/photo-1516733725897-1aa73b87c8e8?auto=format&fit=crop&w=1200&q=90" class="lightbox-img" alt="Party">
+          </div>
+          <div class="lightbox-caption">Celebrations</div>
+        </div>
+      </div>
+
+      <div id="img4" class="lightbox" role="dialog" aria-modal="true" aria-label="Home photo">
+        <a href="#gallery" class="lightbox-bg-click" aria-label="Close lightbox"></a>
+        <div class="lightbox-container" role="document">
+          <a href="#gallery" class="lightbox-close" aria-label="Close lightbox"><span class="x" aria-hidden="true">×</span> Close</a>
+          <div class="lightbox-media">
+            <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=1200&q=90" class="lightbox-img" alt="Home">
+          </div>
+          <div class="lightbox-caption">Home Sweet Home</div>
+        </div>
+      </div>
+
+      <div id="img5" class="lightbox" role="dialog" aria-modal="true" aria-label="Reunion photo">
+        <a href="#gallery" class="lightbox-bg-click" aria-label="Close lightbox"></a>
+        <div class="lightbox-container" role="document">
+          <a href="#gallery" class="lightbox-close" aria-label="Close lightbox"><span class="x" aria-hidden="true">×</span> Close</a>
+          <div class="lightbox-media">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=90" class="lightbox-img" alt="Reunion">
+          </div>
+          <div class="lightbox-caption">Summer Reunion</div>
+        </div>
+      </div>
+
+      <div id="img6" class="lightbox" role="dialog" aria-modal="true" aria-label="Holiday photo">
+        <a href="#gallery" class="lightbox-bg-click" aria-label="Close lightbox"></a>
+        <div class="lightbox-container" role="document">
+          <a href="#gallery" class="lightbox-close" aria-label="Close lightbox"><span class="x" aria-hidden="true">×</span> Close</a>
+          <div class="lightbox-media">
+            <img src="https://images.unsplash.com/photo-1475518845976-0d12797149a3?auto=format&fit=crop&w=1200&q=90" class="lightbox-img" alt="Holiday">
+          </div>
+          <div class="lightbox-caption">Happy Holidays</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="final-note" aria-label="Final note">
+      <div class="section-header">
+        <h2>To the two who made everything possible</h2>
+        <p class="cursive">A final hug</p>
+        <div class="flourish" aria-hidden="true"><span></span></div>
+      </div>
+
+      <div class="final-note">
+        <h3>Thank you for the love you’ve built</h3>
+        <div class="lead">
+          Your marriage has been the gentle heartbeat of our family — steady, patient, and full of kindness.
+        </div>
+        <p>
+          May your days be filled with ease, your home with laughter, and your hearts with calm.
+          Happy anniversary — today and always.
+        </p>
+        <div class="signature" aria-label="Signature">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Made with love, from all of us</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo" aria-label="Footer">
+    <div class="cursive">Made with Love</div>
+    <div><small>&copy; 2024</small></div>
+  </footer>
+
+  <script>
+    (function () {
+      const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ESC closes lightbox (CSS :target)
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const h = location.hash || '';
+        if (h.startsWith('#img')) location.hash = '#gallery';
+      });
+
+      // Soft particle canvas background (lightweight + rAF), respectful of reduced motion
+      const c = document.getElementById('bg-canvas');
+      if (c && c.getContext) {
+        const ctx = c.getContext('2d', { alpha: true });
+        let w = 0, h = 0, dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        const palette = [
+          'rgba(214, 91, 123, 0.22)',
+          'rgba(215, 178, 106, 0.20)',
+          'rgba(169, 139, 255, 0.18)',
+          'rgba(113, 214, 199, 0.16)',
+          'rgba(255, 255, 255, 0.14)'
+        ];
+
+        function resize() {
+          w = window.innerWidth;
+          h = window.innerHeight;
+          c.width = Math.floor(w * dpr);
+          c.height = Math.floor(h * dpr);
+          c.style.width = w + 'px';
+          c.style.height = h + 'px';
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        window.addEventListener('resize', resize, { passive: true });
+        resize();
+
+        const count = Math.max(28, Math.min(70, Math.floor((w * h) / 35000)));
+        const particles = Array.from({ length: count }, () => ({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: 1 + Math.random() * 2.6,
+          vx: (-0.15 + Math.random() * 0.3),
+          vy: (-0.10 + Math.random() * 0.2),
+          a: 0.35 + Math.random() * 0.45,
+          col: palette[Math.floor(Math.random() * palette.length)]
+        }));
+
+        function drawStatic() {
+          ctx.clearRect(0, 0, w, h);
+          for (const p of particles) {
+            ctx.beginPath();
+            ctx.fillStyle = p.col;
+            ctx.globalAlpha = p.a;
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        if (reduced) {
+          drawStatic();
+        } else {
+          let rafId = 0;
+          function tick() {
+            ctx.clearRect(0, 0, w, h);
+            for (const p of particles) {
+              p.x += p.vx;
+              p.y += p.vy;
+
+              if (p.x < -20) p.x = w + 20;
+              if (p.x > w + 20) p.x = -20;
+              if (p.y < -20) p.y = h + 20;
+              if (p.y > h + 20) p.y = -20;
+
+              ctx.beginPath();
+              ctx.fillStyle = p.col;
+              ctx.globalAlpha = p.a;
+              ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+            rafId = requestAnimationFrame(tick);
+          }
+          tick();
+
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden) cancelAnimationFrame(rafId);
+            else tick();
+          });
+        }
+      }
+
+      // NEW: “pop-up” stars in hero (slow appearance)
+      const starField = document.getElementById('star-field');
+      const hero = document.querySelector('header[role="banner"]');
+      if (!reduced && starField && hero) {
+        const glyphs = ['✦','✧','✺','✶','✷'];
+        const colors = [
+          'rgba(214, 91, 123, 0.88)',
+          'rgba(215, 178, 106, 0.88)',
+          'rgba(169, 139, 255, 0.86)',
+          'rgba(113, 214, 199, 0.78)',
+          'rgba(255, 255, 255, 0.82)'
+        ];
+
+        const MAX_STARS = 22;
+        const SPAWN_MS = 650; // slow + elegant
+        const LIFE_MIN = 2800;
+        const LIFE_MAX = 5200;
+
+        function rand(min, max) { return Math.random() * (max - min) + min; }
+        function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+        function spawnStar() {
+          // keep stars near the center-ish like your screenshot (not too near edges)
+          const x = rand(18, 82);
+          const y = rand(28, 78);
+          const size = rand(12, 22);
+          const life = Math.floor(rand(LIFE_MIN, LIFE_MAX));
+          const rot = Math.floor(rand(-18, 18)) + 'deg';
+
+          const s = document.createElement('span');
+          s.className = 'star-pop';
+          s.textContent = pick(glyphs);
+          s.style.left = x + '%';
+          s.style.top = y + '%';
+          s.style.fontSize = size + 'px';
+          s.style.setProperty('--rot', rot);
+          s.style.color = pick(colors);
+          s.style.animationDuration = life + 'ms';
+
+          starField.appendChild(s);
+
+          // cap stars for perf + cleanliness
+          while (starField.childElementCount > MAX_STARS) {
+            starField.removeChild(starField.firstElementChild);
+          }
+
+          setTimeout(() => {
+            if (s && s.parentNode) s.parentNode.removeChild(s);
+          }, life + 100);
+        }
+
+        // initial sprinkle
+        for (let i = 0; i < 10; i++) {
+          setTimeout(spawnStar, i * 220);
+        }
+
+        // continuous “slow popups”
+        const timer = setInterval(() => {
+          // only spawn when hero is on screen (simple + efficient)
+          const r = hero.getBoundingClientRect();
+          const visible = r.bottom > 0 && r.top < window.innerHeight;
+          if (visible) spawnStar();
+        }, SPAWN_MS);
+
+        // safety: stop if page unloading
+        window.addEventListener('beforeunload', () => clearInterval(timer));
+      }
+    })();
+  </script>
+</body>
+</html>
