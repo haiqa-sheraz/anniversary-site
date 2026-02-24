@@ -1710,6 +1710,29 @@ From<br>
 
   <script>
     (function () {
+    // --- FIX: prevent jump back to top of gallery after closing lightbox ---
+let savedScrollY = null;
+
+// When user opens a lightbox (#imgX), store current scroll position
+window.addEventListener('hashchange', () => {
+  const h = location.hash || '';
+
+  // Opening a lightbox
+  if (h.startsWith('#img')) {
+    savedScrollY = window.scrollY;
+    return;
+  }
+
+  // Closing lightbox (your close links go to #gallery)
+  if (h === '#gallery' && savedScrollY !== null) {
+    // Restore scroll after browser performs its default anchor jump
+    requestAnimationFrame(() => {
+      window.scrollTo(0, savedScrollY);
+      savedScrollY = null;
+    });
+  }
+});
+// --- end fix ---
       const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // ESC closes lightbox (CSS :target)
