@@ -685,8 +685,12 @@
       position: relative;
       background: rgba(0,0,0,.18);
       width: 100%;
-  max-height: 80vh;
       overflow: hidden;
+  height: 80vh;              /* keeps good modal height */
+  display: flex;
+  justify-content: center;   /* center horizontally */
+  align-items: center;       /* center vertically */
+  background: #000;
     }
     .lightbox-media::after{
       content:"";
@@ -705,12 +709,14 @@
     }
 
     .lightbox-img{
-      width: 100%;
-      height: min(72vh, 680px);
-      object-fit: cover;
       transform: scale(1.01);
        object-position: top;
       display: block;
+      max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;  
     }
 
     .lightbox-caption{
